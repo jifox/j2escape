@@ -1,0 +1,159 @@
+[tool.poetry]
+name = "j2escape"
+version = "0.9.0"
+description = "Jinja2 Template Escaper"
+authors = ["jifox <josef.fuchs@j-fuchs.at>"]
+license = "Apache-2.0"
+homepage = "https://github.com/jifox/j2escape.git"
+repository = "https://github.com/jifox/j2escape.git"
+readme = "README.md"
+keywords = ["Cookiecutter", "Cruft", "Jinja2", "Utility"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+jinja2 = "^3.1.2"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.1.1"
+# Code style enforcement
+black = "*"
+# Test code coverage measurement
+coverage = "*"
+# NOTE: flake8 4.x pins importlib-metadata<4.3; see https://github.com/PyCQA/flake8/pull/1438
+flake8 = "~3.9.1"
+# Code static analysis
+pylint = {version = "~2.14.5", python = "^3.7.2"}
+# Test framework
+pytest = "*"
+rope = "^1.7.0"
+bandit = "^1.7.5"
+pydocstyle = "^6.3.0"
+
+[tool.poetry.scripts]
+j2escape = "j2escape.j2escape:main"
+
+[tool.pytest]
+addopts = "--cov=j2escape --cov-report=html"
+testpaths = "tests"
+
+[tool.black]
+line-length = 120
+target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+)
+'''
+
+[tool.pylint.basic]
+# No docstrings required yet for private functions, or for test_* functions, or for inner Meta classes.
+no-docstring-rgx="^(_|test_|Meta$)"
+# Don't complain about "pk" as a variable name
+good-names = """_,i,j,k,pk"""
+
+[tool.pylint.message_control]
+# TODO: re-enable and fix these as time permits
+# unused-import is already covered by flake8
+disable=""",
+    abstract-method,
+    arguments-renamed,
+    attribute-defined-outside-init,
+    broad-except,
+    consider-iterating-dictionary,
+    consider-using-from-import,
+    consider-using-in,
+    consider-using-generator,
+    cyclic-import,
+    duplicate-code,
+    empty-docstring,
+    exec-used,
+    fixme,
+    global-statement,
+    global-variable-not-assigned,
+    import-outside-toplevel,
+    invalid-name,
+    keyword-arg-before-vararg,
+    line-too-long,
+    logging-format-interpolation,
+    logging-fstring-interpolation,
+    missing-class-docstring,
+    missing-function-docstring,
+    missing-module-docstring,
+    no-else-raise,
+    no-else-return,
+    no-member,
+    not-callable,
+    pointless-statement,
+    pointless-string-statement,
+    protected-access,
+    raise-missing-from,
+    self-assigning-variable,
+    signature-differs,
+    super-init-not-called,
+    super-with-arguments,
+    superfluous-parens,
+    too-few-public-methods,
+    too-many-ancestors,
+    too-many-arguments,
+    too-many-boolean-expressions,
+    too-many-branches,
+    too-many-instance-attributes,
+    too-many-lines,
+    too-many-locals,
+    too-many-nested-blocks,
+    too-many-public-methods,
+    too-many-return-statements,
+    too-many-statements,
+    ungrouped-imports,
+    unnecessary-dunder-call,
+    unspecified-encoding,
+    unused-argument,
+    unused-import,
+    unused-wildcard-import,
+    use-maxsplit-arg,
+    wildcard-import,
+    wrong-import-order,
+    wrong-import-position,
+    """
+
+[tool.pylint.miscellaneous]
+# We don't want to fail on "TODO" comments as there are plenty of those in our code for good reason
+notes = """,
+    FIXME,
+    TODO,
+    XXX,
+    """
+
+[tool.pylint.typecheck]
+# @patch changes the signature of a function it's applied to; don't raise "no-value-for-parameter" here
+signature-mutators=["unittest.mock.patch"]
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
