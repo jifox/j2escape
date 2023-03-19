@@ -4,7 +4,9 @@
 import os
 import tempfile
 import pytest
-import subprocess
+
+# import subprocess
+from pathlib import Path
 from j2escape.j2escape import J2Escape
 
 TEST_DATA_DIR = "tests/data"
@@ -31,6 +33,7 @@ class TemplateData:
 def setup():
     """Initialize the test."""
     # Erase the test data directory
+    Path(TEST_DATA_DIR).mkdir(parents=True, exist_ok=True)
     for file in os.listdir(TEST_DATA_DIR):
         os.remove(os.path.join(TEST_DATA_DIR, file))
 
