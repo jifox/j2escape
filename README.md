@@ -1,6 +1,6 @@
 # J2Escape
 
-[![.github/workflows/python-package.yml](https://github.com/jifox/j2escape/actions/workflows/python-package.yml/badge.svg)](https://github.com/jifox/j2escape/actions/workflows/python-package.yml)
+[![.github/workflows/python-package.yml](https://github.com/jifox/j2escape/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/jifox/j2escape/actions/workflows/python-package.yml)
 
 This Python module enables storing Jinja2 templates in a
 [Cookiecutter](https://github.com/cookiecutter/cookiecutter)
