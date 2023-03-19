@@ -3,8 +3,8 @@
 [![.github/workflows/python-package.yml](https://github.com/jifox/j2escape/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/jifox/j2escape/actions/workflows/python-package.yml)
 , [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 , [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
-, [![Python 3.10](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-310/)
-, [![Python 3.11](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-311/)
+, [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-310/)
+, [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-311/)
 
 
 This Python module enables storing Jinja2 templates in a
