@@ -1,13 +1,14 @@
 # Test J2Escape
 
 # Path: j2escape/tests/test_je2scape.py
+import logging
 import os
 import tempfile
 import pytest
 
 # import subprocess
 from pathlib import Path
-from j2escape.j2escape import J2Escape
+from j2escape.j2escape import J2Escape, init_logging, logger
 
 TEST_DATA_DIR = "tests/data"
 
@@ -134,3 +135,15 @@ def test_escape_write_dir_to_same_location():
             f"Error idx={idx}:\n" f"escaped= {escaped} != TemplateData.templates[idx + 1]\n"
         )
         idx += 2
+
+
+def test_init_logging():
+    """Test init_logging."""
+    init_logging()
+    assert logger.getEffectiveLevel() == logging.INFO
+    init_logging(logging.DEBUG)
+    assert logger.getEffectiveLevel() == logging.DEBUG
+    init_logging(logging.DEBUG, "test.log")
+    assert logger.getEffectiveLevel() == logging.DEBUG
+    assert Path("test.log").is_file()
+    Path("test.log").unlink()

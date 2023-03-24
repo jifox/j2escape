@@ -171,6 +171,11 @@ def init_logging(level: int = logging.INFO, logfile: Optional[str] = None):
         datefmt="%Y-%m-%d %H:%M:%S",
         filename=logfile,
     )
+    logger.level = level
+    # set log to filename if specified
+    if logfile:
+        logger.addHandler(logging.FileHandler(logfile))
+    logger.debug("Logging initialized")
 
 
 def main():
