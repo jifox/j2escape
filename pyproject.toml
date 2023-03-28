@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "j2escape"
-version = "0.9.0"
+version = "1.0.0"
 description = "Jinja2 Template Escaper"
 authors = ["jifox <josef.fuchs@j-fuchs.at>"]
 license = "Apache-2.0"
@@ -10,7 +10,7 @@ readme = "README.md"
 keywords = ["Cookiecutter", "Cruft", "Jinja2", "Utility"]
 classifiers = [
     "Intended Audience :: Developers",
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -152,7 +152,6 @@ notes = """,
 [tool.pylint.typecheck]
 # @patch changes the signature of a function it's applied to; don't raise "no-value-for-parameter" here
 signature-mutators=["unittest.mock.patch"]
-
 
 [build-system]
 requires = ["poetry-core"]

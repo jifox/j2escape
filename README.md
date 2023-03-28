@@ -7,6 +7,14 @@
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-311/)
 
 
+### Installation
+
+```
+pip install j2escape
+```
+
+### Description
+
 This Python module enables storing Jinja2 templates in a
 [Cookiecutter](https://github.com/cookiecutter/cookiecutter)
 or [Cruft](https://github.com/cruft/cruft) project.
