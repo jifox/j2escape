@@ -1,6 +1,7 @@
 # J2Escape
 
 [![.github/workflows/python-package.yml](https://github.com/jifox/j2escape/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/jifox/j2escape/actions/workflows/python-package.yml)
+[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-310/)
