@@ -178,63 +178,75 @@ def init_logging(level: int = logging.INFO, logfile: Optional[str] = None):
     logger.debug("Logging initialized")
 
 
-def main():
+def main(args=None):
     """Run the script."""
     import argparse
 
     parser = argparse.ArgumentParser(description="Escape jinja2 tags in a directory of templates.")
     parser.add_argument(
         "-t",
-        "--template-dir",
+        "--templates",
         type=str,
-        help="The path to a directory containing one or more files with the extension .j2.",
+        help="A comma-separated string of Jinja Templates (*.j2) or a directory with *.j2 files.",
     )
     parser.add_argument(
         "-o",
         "--output-dir",
         type=str,
-        help="The path to the directory where the escaped templates should be saved.",
+        help="Specifies the directory path where the escaped templates will be stored.",
     )
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Overwrites the original templates in the --template-dir. Required if --output-dir is not set.",
+        help="Replaces the original templates. This is necessary if the --output-dir is not provided.",
     )
     parser.add_argument(
         "-c",
         "--create-ok",
         action="store_true",
-        help="Create the output directory if it does not exist.",
+        default=False,
+        help="Generates the output directory if it doesn’t already exist.",
     )
     parser.add_argument(
         "-l",
         "--loglevel",
         type=str,
+        help="log level",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         default="INFO",
-        help="The loglevel. Default is INFO.",
     )
     parser.add_argument(
-        "-v",
+        "-f",
         "--logfile",
         type=str,
         default=None,
-        help="The logfile. Default is None.",
+        help="Specifies the logfile. If not provided, the default is None",
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
-    if args.template_dir and args.output_dir:
-        if Path(args.template_dir).resolve() == Path(args.output_dir).resolve():
-            raise ValueError(
-                "Error: template-dir and output-dir must be different! Use --overwrite to overwrite the original templates."
-            )
+    if args.logfile:
+        logger.addHandler(logging.FileHandler(args.logfile))
+        logger.setLevel(logging.getLevelName(args.loglevel))
+    else:
+        # configure log to stdout
+        logging.basicConfig(level=logging.getLevelName(args.loglevel))
+
     if not args.output_dir and not args.overwrite:
         raise ValueError("Error: output-dir must be set or parameter --overwrite must be present!")
 
-    if not Path(args.template_dir).is_dir():
-        raise ValueError("Error: template-dir must be a valid directoryname!")
+    for template in args.templates.split(","):
+        template = template.strip()
+        if template and args.output_dir:
+            if Path(template).resolve() == Path(args.output_dir).resolve():
+                if not args.overwrite:
+                    raise ValueError(
+                        "Error: --templates and --output-dir must be different! Use --overwrite to overwrite the original templates."
+                    )
+        if not Path(template).is_file():
+            if not Path(template).is_dir():
+                raise ValueError("Error: --templates must be a filename or a valid directoryname!")
 
-    init_logging(level=args.loglevel.upper(), logfile=args.logfile)
-    logger.info(f"Starting j2escape with args: {args}")
-    j2escape = J2Escape(args.template_dir)
-    j2escape.save_to_directory(args.output_dir, create_ok=args.create_ok)
+        logger.info(f"Starting j2escape with args: {args}")
+        j2escape = J2Escape(template.strip())
+        j2escape.save_to_directory(args.output_dir, create_ok=args.create_ok)

@@ -14,51 +14,45 @@
 pip install j2escape
 ```
 
-### Description
+### Overview
 
-This Python module enables storing Jinja2 templates in a
-[Cookiecutter](https://github.com/cookiecutter/cookiecutter)
-or [Cruft](https://github.com/cruft/cruft) project.
+This module, written in Python, facilitates the storage of Jinja2 templates within a project managed by [Cookiecutter](https://github.com/cookiecutter/cookiecutter) or [Cruft](https://github.com/cruft/cruft).
 
-When replacing input variables in the source code, Cookiecutter internally uses
-Jinja templates. However, this may lead to errors if a Jinja template such
-as `{% if config.allow_duplicates %}` refers to the application instead of Cookiecutter or Cruft.
+Cookiecutter utilizes Jinja templates internally when substituting input variables in the source code. However, this can result in errors if a Jinja template, such as {% if config.allow_duplicates %}, is intended for the application rather than Cookiecutter or Cruft.
 
-To avoid this issue, the module leverages the `jinja2.lex()` function to parse the
-template and escape the blocks accordingly.
+To circumvent this problem, this module employs the jinja2.lex() function to parse and appropriately escape the template blocks.
 
-The conversion is idempodent so escaping an already escaped template will not change it.
+The transformation process is idempotent, meaning that an already escaped template will remain unchanged when escaped again.
+
+Example:
 
 | Template | Escaped Template |
 |---|---|
 | {{ variable }} | {{ '{{' }} variable {{ '}}' }} |
 | {% if config.allow_duplicates %} | {{ '{%' }} if config.allow_duplicates {{ '%}' }} |
 
-The module can be run as a command-line interface using the `j2escape`
-command, which can be used to escape jinja2 tags in a directory of templates.
+The module also provides a command-line interface that can be accessed using the `j2escape` command. This command can be utilized to escape jinja2 tags within a directory of templates.
 
-Here's a list of the available options:
+### j2escape usage
 
 ```bash
 j2escape --help
-usage: j2escape [-h] [-t TEMPLATE_DIR] [-o OUTPUT_DIR] [--overwrite] [-c] [-l LOGLEVEL] [-v LOGFILE]
+usage: j2escape [-h] [-t TEMPLATES] [-o OUTPUT_DIR] [--overwrite] [-c] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-f LOGFILE]
 
 Escape jinja2 tags in a directory of templates.
 
 options:
   -h, --help            show this help message and exit
-  -t TEMPLATE_DIR, --template-dir TEMPLATE_DIR
-                        The path to a directory containing one or more files
-                        with the extension .j2.
+  -t TEMPLATES, --templates TEMPLATES
+                        A comma-separated string of Jinja Templates (*.j2) or a directory with *.j2 files.
   -o OUTPUT_DIR, --output-dir OUTPUT_DIR
-                        The path to the directory where the escaped templates should be saved.
-  --overwrite           Overwrites the original templates in the --template-dir. Required if
-                        --output-dir is not set.
-  -c, --create-ok       Create the output directory if it does not exist.
-  -l LOGLEVEL, --loglevel LOGLEVEL
-                        The loglevel. Default is INFO.
-  -v LOGFILE, --logfile LOGFILE
-                        The logfile. Default is None.
+                        Specifies the directory path where the escaped templates will be stored.
+  --overwrite           Replaces the original templates. This is necessary if the --output-dir is not provided.
+  -c, --create-ok       Generates the output directory if it doesn’t already exist.
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --loglevel {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        log level
+  -f LOGFILE, --logfile LOGFILE
+                        Specifies the logfile. If not provided, the default is None
 ```
 
 To use the module in Python code, you can import it as follows:
@@ -77,3 +71,28 @@ j2e.save_to_directory(outputdir=output_directory, create_ok=allow_create_output_
 The static method `get_escaped()` can be used to escape templates in memory:
 
 `escaped_tamplate_string = J2Escape.get_escaped(plain_template_string)`
+
+
+### Development
+
+Install [poetry](https://python-poetry.org/docs/#installation) and [pre-commit](https://pre-commit.com/#install) to manage the development environment.
+
+Clone the repository and install the development dependencies:
+
+```bash
+git clone https://github.com/jifox/j2escape.git
+cd j2escape
+poetry install
+```
+
+`pre-commit` hooks are used to ensure code quality. To install the pre-commit hooks, run the following command:
+
+```bash
+pre-commit install
+```
+
+Use pre-commit to run the hooks on all files:
+
+```bash
+pre-commit run --all-files
+```
