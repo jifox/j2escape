@@ -221,7 +221,8 @@ def test_cli():
     main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-o", f"{TEST_DATA_DIR}", "-l", "DEBUG"])
     main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-o", f"{TEST_DATA_DIR}", "-f", "test.log"])
     # Check if exists before removing
-    Path("test.log").unlink(missing_ok=True)
+    assert Path("test.log").is_file()
+    Path("test.log").unlink()
 
     # Test the main function with a directory
     with pytest.raises(ValueError):
@@ -235,4 +236,5 @@ def test_cli():
     Path("test.log").unlink()
     # Test the main function with multiple files and a directory
     main(["-t", f"{TEST_DATA_DIR}/template1.j2, {TEST_DATA_DIR}/template2.j2", "-o", f"{TEST_DATA_DIR}", "--overwrite"])
-    Path("test.log").unlink(missing_ok=True)
+    if Path("test.log").is_file():
+        Path("test.log").unlink()
