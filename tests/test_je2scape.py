@@ -3,12 +3,13 @@
 # Path: j2escape/tests/test_je2scape.py
 import logging
 import os
+import sys
 import tempfile
 import pytest
 
 # import subprocess
 from pathlib import Path
-from j2escape.j2escape import J2Escape, init_logging, logger
+from j2escape.j2escape import J2Escape, init_logging, logger, main
 
 TEST_DATA_DIR = "tests/data"
 
@@ -147,3 +148,91 @@ def test_init_logging():
     assert logger.getEffectiveLevel() == logging.DEBUG
     assert Path("test.log").is_file()
     Path("test.log").unlink()
+
+
+# # Test the command line interface
+# j2escape -h
+# usage: j2escape [-h] [-t TEMPLATES] [-o OUTPUT_DIR] [--overwrite] [-c]
+#                 [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-v LOGFILE]
+
+# Escape jinja2 tags in a directory of templates.
+
+
+# options:
+#   -h, --help            show this help message and exit
+#   -t TEMPLATES, --templates TEMPLATES
+#                         A template filename or a path to a directory containing one or more
+#                         files with the extension .j2.
+#   -o OUTPUT_DIR, --output-dir OUTPUT_DIR
+#                         The path to the directory where the escaped templates should be
+#                         saved.
+#   --overwrite           Overwrites the original templates. Required if --output-dir is not
+#                         set.
+#   -c, --create-ok       Create the output directory if it does not exist.
+#   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --loglevel {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+#                         log level
+#   -v LOGFILE, --logfile LOGFILE
+#                         The logfile. Default is None
+def test_cli():
+    """Test the command line interface."""
+    # Test the help
+    with pytest.raises(SystemExit):
+        main(["-h"])
+    # Test the template argument
+    with pytest.raises(ValueError):
+        main([])
+    with pytest.raises(ValueError):
+        main(["-t", "does_not_exist.j2"])
+    with pytest.raises(ValueError):
+        main(["-t", "does_not_exist"])
+    with pytest.raises(ValueError):
+        main(["-t", "does_not_exist.j2", "-o", "does_not_exist"])
+    with pytest.raises(ValueError):
+        main(["-t", "does_not_exist", "-o", "does_not_exist"])
+    with pytest.raises(ValueError):
+        main(["-t", "does_not_exist.j2", "-o", "does_not_exist", "--overwrite"])
+    with pytest.raises(ValueError):
+        main(["-t", "does_not_exist", "-o", "does_not_exist", "--overwrite"])
+    # Test the output directory argument
+    with pytest.raises(ValueError):
+        main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-o", "does_not_exist"])
+    with pytest.raises(ValueError):
+        main(["-t", f"{TEST_DATA_DIR}", "-o", "does_not_exist"])
+    # Test the overwrite argument
+    with pytest.raises(ValueError):
+        main(["-t", f"{TEST_DATA_DIR}/template1.j2", "--overwrite"])
+    # Test the create-ok argument
+    with pytest.raises(ValueError):
+        main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-c"])
+    # Test the loglevel argument
+    with pytest.raises(SystemExit):
+        main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-l", "does_not_exist"])
+    # Test the logfile argument
+    with pytest.raises(ValueError):
+        main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-f", "does_not_exist"])
+    # Test the main function
+    with pytest.raises(ValueError):
+        # Error: output-dir must be set or parameter --overwrite must be present!
+        main(["-t", f"{TEST_DATA_DIR}/template1.j2"])
+
+    main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-o", f"{TEST_DATA_DIR}"])
+    main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-o", f"{TEST_DATA_DIR}", "--overwrite"])
+    main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-o", f"{TEST_DATA_DIR}", "--overwrite", "-c"])
+    main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-o", f"{TEST_DATA_DIR}", "-l", "DEBUG"])
+    main(["-t", f"{TEST_DATA_DIR}/template1.j2", "-o", f"{TEST_DATA_DIR}", "-f", "test.log"])
+    # Check if exists before removing
+    Path("test.log").unlink(missing_ok=True)
+
+    # Test the main function with a directory
+    with pytest.raises(ValueError):
+        # Error: --templates and --output-dir must be different! Use --overwrite to overwrite the original templates
+        main(["-t", f"{TEST_DATA_DIR}", "-o", f"{TEST_DATA_DIR}"])
+    main(["-t", f"{TEST_DATA_DIR}", "-o", f"{TEST_DATA_DIR}", "--overwrite"])
+    main(["-t", f"{TEST_DATA_DIR}", "-o", f"{TEST_DATA_DIR}", "--overwrite", "-c"])
+    main(["-t", f"{TEST_DATA_DIR}", "-o", f"{TEST_DATA_DIR}", "--overwrite", "-l", "DEBUG"])
+    main(["-t", f"{TEST_DATA_DIR}", "-o", f"{TEST_DATA_DIR}", "--overwrite", "-f", "test.log"])
+    assert Path("test.log").is_file()
+    Path("test.log").unlink()
+    # Test the main function with multiple files and a directory
+    main(["-t", f"{TEST_DATA_DIR}/template1.j2, {TEST_DATA_DIR}/template2.j2", "-o", f"{TEST_DATA_DIR}", "--overwrite"])
+    Path("test.log").unlink(missing_ok=True)

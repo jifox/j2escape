@@ -252,5 +252,5 @@ fabric.properties
 *.code-workspace
 
 # j2escape
-tests/data/*
-!tests/data
+tests/data/*.j2
+does_not_exist
