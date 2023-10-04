@@ -1,5 +1,9 @@
 # Changelog
 
+## v.1.0.3
+
+  - Added description for publishing to PyPI
+
 ## v.1.0.2
 
 ### New Features

@@ -96,3 +96,30 @@ Use pre-commit to run the hooks on all files:
 ```bash
 pre-commit run --all-files
 ```
+
+## Publishing to PyPi
+
+To publish a new version to PyPi, first update the version number in `pyproject.toml`. Then, run the following commands to build and publish the package:
+
+
+**Initialize the pypi token:**
+
+At a first step you need to initialize the pypi token. This is a one time step. You can find the token in your pypi account settings.
+
+```bash
+MY_PYPI_USERNAME='__token__'
+MY_PYPI_PASSWORD='pypi-myApiToken'
+
+# Run once:
+poetry config pypi-token.pypi $MY_PYPI_PASSWORD
+```
+
+**Build and publish the package**
+
+```bash
+# Build the package
+poetry build
+
+# Publish the package
+poetry publish
+```
